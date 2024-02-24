@@ -7,7 +7,11 @@ const port =  3008;
 app.get('/assos/:login', async (req, res) => {
     const login = req.params.login;
     try {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({    
+            executablePath: await puppeteer.executablePath(),
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        
         const page = await browser.newPage();
         const url = `https://assos.utc.fr/assos/${login}`;
         await page.goto(url, { waitUntil: 'networkidle0' });
@@ -55,7 +59,10 @@ app.get('/assos/:login', async (req, res) => {
 
 app.get('/assos', async (req, res) => {
     try{
-        const browser = await puppeteer.launch(); // Désactivez headless si vous souhaitez voir le navigateur en action
+        const browser = await puppeteer.launch({
+            executablePath: await puppeteer.executablePath(),
+            args: ['--no-sandbox', '--disable-setuid-sandbox']        
+        }); 
         const page = await browser.newPage();
         const url = "https://assos.utc.fr/assos";
         await page.goto(url, { waitUntil: 'networkidle0' });
